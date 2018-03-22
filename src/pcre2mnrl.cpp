@@ -14,55 +14,50 @@ char *strdup(const char *src_str) noexcept {
     return new_str;
 }
 
-void printUsage(){
- cout << "Usage: pcre2mnrl [OPTION] <regex file path> <mnrl file path>" << endl;
+void printUsage(char *argv[]){
+ cout << "Usage: " << argv[0] << " [FLAG] <regex file path> <mnrl file path>" << endl;
+ cout << "	FLAG is optional. By deafult, pcre2mnrl supports backwards compatibility" << endl;
  cout << "	-f, --force 	Force compilation by discarding invalid modifiers." << endl;
- cout << "	-a, --abort	Abort compilation if there are invalid modifiers." << endl;
 }
 
 int main(int argc, char *argv[]) {
   
     // -f force to compile by discarding invalid modifiers
-    // -a abort compilation if there are invalid modifiers.
     long flag_option; 
     int fflag = 0;
-    int aflag = 0;
-    char choice = 'n';
-    while((flag_option = getopt(argc, argv, "af")) != -1){
+    while((flag_option = getopt(argc, argv, "f")) != -1){
       switch(flag_option){
 	case 'f':
 	  if(fflag){
-	    printUsage();
-	    return 1;
-	  } else {
-	    aflag ++;
-	    fflag ++;
+	   printUsage(argv);
+	   return 1;
 	  }
-	  choice = 'f';
-	  break;
-	case 'a':
-	  if(aflag){
-	    printUsage();
-	    return 1;
-	  } else {
-	    aflag ++;
-	    fflag ++;
-	  }
-	  choice = 'a';
+	  fflag ++;
 	  break;
 	default:
-	  printUsage();
+	  printUsage(argv);
 	  return 1;
       }
     }
   
-    if (argc != 4) {
-	printUsage();
+    if (argc < 3) {
+	printUsage(argv);
         return 1;
     }
     
+    string inFileName;
+    string outFileName;
+    
+    if(fflag){
+      inFileName = argv[2];
+      outFileName = argv[3];
+    } else {
+      inFileName = argv[1];
+      outFileName = argv[2];
+    }
+    
     // read in the file
-    ifstream infile(argv[2]);
+    ifstream infile(inFileName);
     string line;
     
     vector<string> expressions;
@@ -108,9 +103,9 @@ int main(int argc, char *argv[]) {
                     e_flags |= HS_FLAG_SINGLEMATCH;
                     break;
                 default:
-		    if(choice == 'f'){
+		    if(fflag){
 		      continue;
-		    } else if (choice == 'a') {
+		    } else {
 		      failed = true; 
 		      cerr << "Unsupported modifier '" << m << "' on line " << i+1 << endl;
 		    }
@@ -145,12 +140,12 @@ int main(int argc, char *argv[]) {
                      &ids[0],
                      cexpressions.size(),
                      &compile_err) != HS_SUCCESS) {
-        cerr << "ERROR: Unable to compile PCRE expression file " << argv[2] << " expression number " << compile_err->expression << " : " << compile_err->message << endl;
+        cerr << "ERROR: Unable to compile PCRE expression file " << inFileName << " expression number " << compile_err->expression << " : " << compile_err->message << endl;
         cerr << " pcre: " << expressions[compile_err->expression] << endl;
         cerr << " flags: " << flags[compile_err->expression] << endl;
     }
     
-    mnrl.exportToFile(argv[3]);
+    mnrl.exportToFile(outFileName);
     
     return 0;
     
