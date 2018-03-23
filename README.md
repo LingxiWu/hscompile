@@ -1,42 +1,39 @@
 # hscompile
-This repository contains a compiler and runtime for MNRL files
-using Hyperscan as a CPU back-end.  There is also support for compiling PCRE to MNRL files.
+This is a forked and modified version of hscompile. For detailed installation instruction and other information, please visit [here](https://github.com/kevinaangstadt/hscompile.git).
 
-*Note:* Only hStates are currently supported.
+## Extended features:
+- Added *regex_filter.cpp*
 
-## Required Packages
+    **Usage**
+    ```bash
+    ./regex_filter <snort_regex_file_name> <filtered_snort_regex_file_path>
+    ```
 
-- cmake >= 2.6
-- Hyperscan 4.4 source
-    - Boost >= 1.57
-- MNRL
+    **Purpose**
 
-## Building
-To successfully build `hscompile`, you must first build Hyperscan and the MNRL C++ API:
+    It takes a file of regular expressions and determine if they can be compiled by [hyperscan](https://github.com/intel/hyperscan.git)<br />
+    It generates possibly two files: failedPCRE.regex (containing those regex which did NOT pass hyperscan compilation) and succeedPCRE.regex (containing those regex which passed hyperscan compilation)
 
-```bash
-git clone https://github.com/01org/hyperscan
-cd hyperscan
-git checkout v4.4.1
-mkdir build
-cd build
-cmake ..
-make
-```
+    **Parameters**
 
-```bash
-git clone https://github.com/kevinaangstadt/mnrl
-cd mnrl/C++
-make
-```
+    Param 1: <snort_regex_file_name> path to the input regex file.<br />
+    Param 2: <filtered_snort_regex_file_path> path to the output regex files.
 
-Next, clone the `hscompile` repository and create a build directory inside the repo.  Then, you can use `cmake` to generate a Makefile and build.  You must provide paths to Hyperscan (`HS_SOURCE_DIR`) and MNRL (`MNRL_SOURCE_DIR`), and you can override the default Hyperscan build path with `HS_BUILD_DIR`.
+- Modified *pcre2mnrl.cpp*
 
-```bash
-git clone https://github.com/kevinaangstadt/hscompile
-cd hscompile
-mkdir build
-cd build
-cmake -DHS_SOURCE_DIR=/path/to/hyperscan -DMNRL_SOURCE_DIR=/path/to/mnrl/C++ ..
-make
-```
+    **Usage**
+    ```bash
+    ./pcre2mnrl [FLAG] <regex file path> <mnrl file path> 
+    ```
+    FLAG is optional. By deafult, pcre2mnrl supports backwards compatibility.<br />
+    -f, --force Force compilation by discarding invalid modifiers.
+
+    **Purpose**
+
+    It converts a collection of regex to a single .mnrl file (automaton description).<br />
+    It generates one .mnrl file.
+
+    **Parameters**
+
+    Param 1: <regex file path> path to the input regex file.<br />
+    Param 2: <mnrl file path> path to the output .mnrl file.
