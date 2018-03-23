@@ -5,10 +5,13 @@ project(hscompile C CXX)
 # deal with Boost
 set(BOOST_MINVERSION 1.57.0)
 
+<<<<<<< HEAD
 # for debugging purpose. Comment this out when in production.
 set(CMAKE_BUILD_TYPE Debug)
 
 
+=======
+>>>>>>> f5e2c6dcd18a7f1d88ceb813c917c2f72679636b
 find_package(Boost ${BOOST_MINVERSION} QUIET COMPONENTS regex)
 if(NOT Boost_FOUND)
     message(FATAL_ERROR "Boost ${BOOST_MINVERSION} or later not found. Either install system packages if available or set the CMake BOOST_ROOT variable.")
@@ -83,6 +86,7 @@ set(pcre2mnrl_SRC
     src/pcre2mnrl.cpp
 )
 
+<<<<<<< HEAD
 set(regex_filter_SRC
     src/regex_filter.cpp
 )
@@ -103,6 +107,14 @@ add_executable(convertBatch ${convertBatch_SRC})
 
 # we always want to link with CXX
 set_target_properties(hscompile hsrun pcre2mnrl regex_filter convertBatch
+=======
+add_executable(hscompile ${hscompile_SRC})
+add_executable(hsrun ${hsrun_SRC})
+add_executable(pcre2mnrl ${pcre2mnrl_SRC})
+
+# we always want to link with CXX
+set_target_properties(hscompile hsrun pcre2mnrl
+>>>>>>> f5e2c6dcd18a7f1d88ceb813c917c2f72679636b
     PROPERTIES LINKER_LANGUAGE CXX
     C_STANDARD 99
 )
@@ -110,11 +122,17 @@ set_target_properties(hscompile hsrun pcre2mnrl regex_filter convertBatch
 target_compile_features(hscompile PRIVATE cxx_range_for)
 target_compile_features(hsrun PRIVATE cxx_range_for)
 target_compile_features(pcre2mnrl PRIVATE cxx_range_for)
+<<<<<<< HEAD
 target_compile_features(regex_filter PRIVATE cxx_range_for)
 target_compile_features(convertBatch PRIVATE cxx_range_for)
+=======
+>>>>>>> f5e2c6dcd18a7f1d88ceb813c917c2f72679636b
 
 target_link_libraries(hscompile ${HS_BUILD_DIR}/lib/libhs.a ${MNRL_SOURCE_DIR}/libmnrl.a)
 target_link_libraries(hsrun ${HS_BUILD_DIR}/lib/libhs.a)
 target_link_libraries(pcre2mnrl ${HS_BUILD_DIR}/lib/libhs.a ${MNRL_SOURCE_DIR}/libmnrl.a ${Boost_LIBRARIES})
+<<<<<<< HEAD
 target_link_libraries(regex_filter ${HS_BUILD_DIR}/lib/libhs.a ${MNRL_SOURCE_DIR}/libmnrl.a ${Boost_LIBRARIES})
 target_link_libraries(convertBatch ${HS_BUILD_DIR}/lib/libhs.a ${MNRL_SOURCE_DIR}/libmnrl.a ${Boost_LIBRARIES})
+=======
+>>>>>>> f5e2c6dcd18a7f1d88ceb813c917c2f72679636b
