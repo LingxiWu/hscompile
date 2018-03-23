@@ -23,7 +23,7 @@ This is a forked and modified version of hscompile. For detailed installation in
 
     **Usage**
     ```bash
-    ./pcre2mnrl [FLAG] <regex file path> <mnrl file path> 
+    ./pcre2mnrl [FLAG] <regex_file_path> <mnrl_file_path> 
     ```
     FLAG is optional. By deafult, pcre2mnrl supports backwards compatibility.<br />
     -f, --force Force compilation by discarding invalid modifiers.
@@ -35,5 +35,5 @@ This is a forked and modified version of hscompile. For detailed installation in
 
     **Parameters**
 
-    Param 1: <regex file path> path to the input regex file.<br />
-    Param 2: <mnrl file path> path to the output .mnrl file.
+    Param 1: <regex_file_path> path to the input regex file.<br />
+    Param 2: <mnrl_file_path> path to the output .mnrl file.
